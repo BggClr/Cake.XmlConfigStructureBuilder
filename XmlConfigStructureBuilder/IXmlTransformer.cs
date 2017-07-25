@@ -1,4 +1,4 @@
-﻿namespace BggClr.XmlConfigStructureBuilder
+﻿namespace Cake.XmlConfigStructureBuilder
 {
 	public interface IXmlTransformer
 	{

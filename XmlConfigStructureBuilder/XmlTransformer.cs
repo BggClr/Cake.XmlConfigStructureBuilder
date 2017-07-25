@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace BggClr.XmlConfigStructureBuilder
+namespace Cake.XmlConfigStructureBuilder
 {
 	public class XmlTransformer : IXmlTransformer
 	{
