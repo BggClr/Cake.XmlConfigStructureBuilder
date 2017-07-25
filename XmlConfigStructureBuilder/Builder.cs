@@ -3,23 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Cake.Core;
+using Cake.Core.Annotations;
+using Cake.Core.IO;
+using Path = System.IO.Path;
 
 namespace Cake.XmlConfigStructureBuilder
 {
-	public class Builder
+	public static class Builder
 	{
-		private readonly ISettings _settings;
-		private readonly IXmlTransformer _transformer;
+		private const string ConfigsFolder = "_configs";
 
-		public Builder(IXmlTransformer transformer, ISettings settings)
+		[CakeMethodAlias]
+		public static void CompileXmlConfig(this ICakeContext context, IEnumerable<string> filenames, string result)
 		{
-			_transformer = transformer;
-			_settings = settings;
-		}
-
-		public void CompileXmlConfig(IEnumerable<string> filenames, string result)
-		{
-			var existingFiles = filenames.Where(File.Exists).ToArray();
+			var existingFiles = filenames.Where(p => context.FileSystem.Exist(new FilePath(p))).ToArray();
 			var firstConfigFile = existingFiles.FirstOrDefault();
 
 			if (firstConfigFile == null)
@@ -27,25 +25,29 @@ namespace Cake.XmlConfigStructureBuilder
 
 			File.Copy(firstConfigFile, result);
 			var restConfigFiles = existingFiles.Skip(1);
+			var transformer = new XmlTransformer(context);
 
-			foreach (var config in restConfigFiles) _transformer.Transform(result, config, result);
+			foreach (var config in restConfigFiles)
+			{
+				transformer.Transform(result, config, result);
+			}
 		}
 
-		public void CompileConfig(string name, string outDir, string buildConfig)
+		public static void CompileConfig(this ICakeContext context, string name, string outDir, string buildConfig)
 		{
 			var message = $"Name = {outDir}\\{name}.config";
 			Console.WriteLine(message);
 
 			var needGlobal = new[] {"app", "web"}.Contains(name);
-			var filenameTemplates = GetFileNameTemplates(_settings.ConfigsFolder, outDir, needGlobal);
+			var filenameTemplates = GetFileNameTemplates(ConfigsFolder, outDir, needGlobal);
 			var filenames = filenameTemplates.Select(p => string.Format(p, buildConfig, name));
 			var outputFileName = Path.Combine(outDir, $"{name}.config");
-			CompileXmlConfig(filenames, outputFileName);
+			CompileXmlConfig(context, filenames, outputFileName);
 		}
 
-		public void CompileProjectConfigs(string buildConfig)
+		public static void CompileProjectConfigs(this ICakeContext context, string buildConfig)
 		{
-			var files = Directory.GetFiles(_settings.ProjectDir, "*.csproj", SearchOption.AllDirectories);
+			var files = Directory.GetFiles(".", "*.csproj", SearchOption.AllDirectories);
 			foreach (var file in files)
 			{
 				var data = File.ReadAllText(file);
@@ -56,12 +58,16 @@ namespace Cake.XmlConfigStructureBuilder
 					.ToArray();
 
 				if (matches.Any())
+				{
 					foreach (var match in matches)
-						CompileConfig(match.Groups["ConfigType"].Value, path, buildConfig);
+					{
+						CompileConfig(context, match.Groups["ConfigType"].Value, path, buildConfig);
+					}
+				}
 			}
 		}
 
-		private IEnumerable<string> GetFileNameTemplates(string configsFolder, string outDir, bool needGlobal)
+		private static IEnumerable<string> GetFileNameTemplates(string configsFolder, string outDir, bool needGlobal)
 		{
 			var globals = new string[] {};
 			if (needGlobal)
