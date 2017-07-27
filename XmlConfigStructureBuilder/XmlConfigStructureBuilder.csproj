@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Cake.Core, Version=0.21.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cake.Core.0.21.1\lib\net45\Cake.Core.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -55,7 +52,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="XmlConfigStructureBuilder.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
