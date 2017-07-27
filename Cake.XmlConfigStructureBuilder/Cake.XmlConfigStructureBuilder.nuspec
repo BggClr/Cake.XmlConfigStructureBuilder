@@ -2,8 +2,8 @@
 
 <package>
 	<metadata>
-		<id>BggClr.XmlConfigStructureBuilder</id>
-		<version>0.5</version>
+		<id>Cake.XmlConfigStructureBuilder</id>
+		<version>0.0.1</version>
 		<title>$title$</title>
 		<authors>BggClr</authors>
 		<owners>$author$</owners>

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Path = System.IO.Path;
 
-namespace Cake.XmlConfigStructureBuilder
+namespace XmlConfigStructureBuilder
 {
 	public static class Builder
 	{
