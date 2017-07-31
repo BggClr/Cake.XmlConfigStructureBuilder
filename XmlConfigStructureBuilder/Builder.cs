@@ -31,17 +31,17 @@ namespace XmlConfigStructureBuilder
 			}
 		}
 
-		public static void CompileConfig(string name, string outDir, string buildConfig)
+		public static void CompileConfig(string name, string outDir, string buildConfig, Func<string, string, bool, IEnumerable<string>> fileNameTemplatesFactory)
 		{
 			var needGlobal = new[] {"app", "web"}.Contains(name);
-			var filenameTemplates = GetFileNameTemplates(ConfigsFolder, outDir, needGlobal);
+			var filenameTemplates = fileNameTemplatesFactory(ConfigsFolder, outDir, needGlobal);
 			var filenames = filenameTemplates.Select(p => string.Format(p, buildConfig, name));
 			var outputFileName = Path.Combine(outDir, $"{name}.config");
 
 			CompileXmlConfig(filenames, outputFileName);
 		}
 
-		public static void CompileProjectConfigs(string buildConfig, string projectRoot = ".")
+		public static void CompileProjectConfigs(string buildConfig, string projectRoot = ".", Func<string, string, bool, IEnumerable<string>> fileNameTemplatesFactory = null)
 		{
 			var files = Directory.GetFiles(projectRoot, "*.csproj", SearchOption.AllDirectories);
 
@@ -60,7 +60,7 @@ namespace XmlConfigStructureBuilder
 				{
 					foreach (var configFile in configFiles)
 					{
-						CompileConfig(configFile, path, buildConfig);
+						CompileConfig(configFile, path, buildConfig, fileNameTemplatesFactory ?? GetFileNameTemplates);
 					}
 				}
 			}
@@ -72,7 +72,7 @@ namespace XmlConfigStructureBuilder
 				{
 					Path.Combine(configsFolder, "Global.Generic.config"),
 					Path.Combine(configsFolder, "Global.{0}.config"),
-					Path.Combine(configsFolder, "Global.{0}.config"),
+					Path.Combine(configsFolder, "{1}.Generic.config"),
 					Path.Combine(configsFolder, "{1}.{0}.config"),
 				};
 

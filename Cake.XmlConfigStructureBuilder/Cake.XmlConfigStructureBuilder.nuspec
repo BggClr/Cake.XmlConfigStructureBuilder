@@ -3,7 +3,7 @@
 <package>
 	<metadata>
 		<id>Cake.XmlConfigStructureBuilder</id>
-		<version>0.0.3-alpha</version>
+		<version>0.0.5-alpha</version>
 		<title>$title$</title>
 		<authors>BggClr</authors>
 		<owners>$author$</owners>
