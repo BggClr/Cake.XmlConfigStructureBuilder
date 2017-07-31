@@ -7,9 +7,9 @@
     <ProjectGuid>{566399D2-4486-430B-B20A-3E1C2600E113}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Cake.XmlConfigStructureBuilder</RootNamespace>
-    <AssemblyName>Cake.XmlConfigStructureBuilder</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>XmlConfigStructureBuilder</RootNamespace>
+    <AssemblyName>XmlConfigStructureBuilder</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Cake.Core, Version=0.21.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cake.Core.0.21.1\lib\net45\Cake.Core.dll</HintPath>
+    <Reference Include="ctt">
+      <HintPath>..\packages\ConfigTransformationTool.1.5.1\tools\ctt.exe</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -50,13 +50,7 @@
     <Compile Include="XmlTransformer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="tools\ctt.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
-    <None Include="XmlConfigStructureBuilder.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

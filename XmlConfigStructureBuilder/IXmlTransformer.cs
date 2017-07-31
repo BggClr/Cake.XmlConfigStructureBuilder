@@ -1,4 +1,4 @@
-﻿namespace Cake.XmlConfigStructureBuilder
+﻿namespace XmlConfigStructureBuilder
 {
 	public interface IXmlTransformer
 	{

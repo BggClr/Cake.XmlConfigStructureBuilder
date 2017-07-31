@@ -1,35 +1,24 @@
-﻿using System.Diagnostics;
-using Cake.Core;
-using Cake.Core.IO;
-using Cake.Core.IO.Arguments;
+﻿using System;
+using System.Diagnostics;
+using OutcoldSolutions.ConfigTransformationTool;
 
-namespace Cake.XmlConfigStructureBuilder
+namespace XmlConfigStructureBuilder
 {
 	public class XmlTransformer : IXmlTransformer
 	{
-		private readonly ICakeContext _context;
-
-		public XmlTransformer(ICakeContext context)
-		{
-			_context = context;
-		}
-
-		private const string CttPath = @".\tools\ctt.exe";
-
 		public void Transform(string config, string transform, string result)
 		{
-			var arguments = new ProcessArgumentBuilder();
-
-			arguments.Append(new TextArgument($"s:{config}"));
-			arguments.Append(new TextArgument($"t:{transform}"));
-			arguments.Append(new TextArgument($"d:{result}"));
-			arguments.Append(new TextArgument("i"));
-			arguments.Append(new TextArgument("ic:\"\t\""));
-
-			_context.ProcessRunner.Start(CttPath, new ProcessSettings
+			var log = OutputLog.FromWriter(Console.Out, Console.Error);
+			var task = new TransformationTask(log, config, transform, false)
 			{
-				Arguments = arguments
-			});
+				Indent = true,
+				IndentChars = "\t"
+			};
+
+			if (!task.Execute(result))
+			{
+				throw new Exception("Transformtion is not completed");
+			}
 		}
 	}
 }

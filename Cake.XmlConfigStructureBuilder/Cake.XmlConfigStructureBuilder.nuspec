@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<package>
+	<metadata>
+		<id>Cake.XmlConfigStructureBuilder</id>
+		<version>0.0.5-alpha</version>
+		<title>$title$</title>
+		<authors>BggClr</authors>
+		<owners>$author$</owners>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<projectUrl>https://github.com/BggClr/XmlConfigStructureBuilder.git</projectUrl>
+		<description>The project compiles multiple xml configs to single one using the CTT</description>
+		<releaseNotes>Initial release.</releaseNotes>
+		<copyright>Copyright 2017</copyright>
+		<tags>Configs-Generator</tags>
+	</metadata>
+	<files>
+		<file src="bin\*.dll" target="lib\net45" />
+		<file src="bin\ctt.*" target="lib\net45" />
+	</files>
+</package>

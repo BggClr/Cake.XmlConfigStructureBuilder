@@ -3,29 +3,27 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Cake.Core;
-using Cake.Core.Annotations;
-using Cake.Core.IO;
 using Path = System.IO.Path;
 
-namespace Cake.XmlConfigStructureBuilder
+namespace XmlConfigStructureBuilder
 {
 	public static class Builder
 	{
 		private const string ConfigsFolder = "_configs";
-
-		[CakeMethodAlias]
-		public static void CompileXmlConfig(this ICakeContext context, IEnumerable<string> filenames, string result)
+		
+		public static void CompileXmlConfig(IEnumerable<string> filenames, string result)
 		{
-			var existingFiles = filenames.Where(p => context.FileSystem.Exist(new FilePath(p))).ToArray();
+			var existingFiles = filenames.Where(File.Exists).ToArray();
 			var firstConfigFile = existingFiles.FirstOrDefault();
 
 			if (firstConfigFile == null)
 				return;
 
-			File.Copy(firstConfigFile, result);
+			Console.WriteLine($"Name = {result}");
+
+			File.Copy(firstConfigFile, result, true);
 			var restConfigFiles = existingFiles.Skip(1);
-			var transformer = new XmlTransformer(context);
+			var transformer = new XmlTransformer();
 
 			foreach (var config in restConfigFiles)
 			{
@@ -33,35 +31,36 @@ namespace Cake.XmlConfigStructureBuilder
 			}
 		}
 
-		public static void CompileConfig(this ICakeContext context, string name, string outDir, string buildConfig)
+		public static void CompileConfig(string name, string outDir, string buildConfig, Func<string, string, bool, IEnumerable<string>> fileNameTemplatesFactory)
 		{
-			var message = $"Name = {outDir}\\{name}.config";
-			Console.WriteLine(message);
-
 			var needGlobal = new[] {"app", "web"}.Contains(name);
-			var filenameTemplates = GetFileNameTemplates(ConfigsFolder, outDir, needGlobal);
+			var filenameTemplates = fileNameTemplatesFactory(ConfigsFolder, outDir, needGlobal);
 			var filenames = filenameTemplates.Select(p => string.Format(p, buildConfig, name));
 			var outputFileName = Path.Combine(outDir, $"{name}.config");
-			CompileXmlConfig(context, filenames, outputFileName);
+
+			CompileXmlConfig(filenames, outputFileName);
 		}
 
-		public static void CompileProjectConfigs(this ICakeContext context, string buildConfig)
+		public static void CompileProjectConfigs(string buildConfig, string projectRoot = ".", Func<string, string, bool, IEnumerable<string>> fileNameTemplatesFactory = null)
 		{
-			var files = Directory.GetFiles(".", "*.csproj", SearchOption.AllDirectories);
+			var files = Directory.GetFiles(projectRoot, "*.csproj", SearchOption.AllDirectories);
+
 			foreach (var file in files)
 			{
 				var data = File.ReadAllText(file);
 				var path = Path.GetDirectoryName(file);
-				var matches = Regex.Matches(data, @"(?<ConfigType>app|web|nlog)\.config", RegexOptions.IgnoreCase)
+				var configFiles = Regex.Matches(data, @"(?<ConfigType>app|web|nlog)\.config", RegexOptions.IgnoreCase)
 					.OfType<Match>()
 					.Where(p => p.Success)
+					.Select(x => x.Groups["ConfigType"].Value.ToLower())
+					.Distinct()
 					.ToArray();
 
-				if (matches.Any())
+				if (configFiles.Any())
 				{
-					foreach (var match in matches)
+					foreach (var configFile in configFiles)
 					{
-						CompileConfig(context, match.Groups["ConfigType"].Value, path, buildConfig);
+						CompileConfig(configFile, path, buildConfig, fileNameTemplatesFactory ?? GetFileNameTemplates);
 					}
 				}
 			}
@@ -69,21 +68,20 @@ namespace Cake.XmlConfigStructureBuilder
 
 		private static IEnumerable<string> GetFileNameTemplates(string configsFolder, string outDir, bool needGlobal)
 		{
-			var globals = new string[] {};
-			if (needGlobal)
-				globals = new[]
+			var globalConfigs = new[]
 				{
 					Path.Combine(configsFolder, "Global.Generic.config"),
-					Path.Combine(configsFolder, "Global.{0}.config")
+					Path.Combine(configsFolder, "Global.{0}.config"),
+					Path.Combine(configsFolder, "{1}.Generic.config"),
+					Path.Combine(configsFolder, "{1}.{0}.config"),
 				};
 
-			return globals.Union(new[]
+			var localConfigs = new[]
 			{
-				Path.Combine(configsFolder, "Global.{0}.config"),
-				Path.Combine(configsFolder, "{1}.{0}.config"),
 				Path.Combine(outDir, "{1}.Generic.config"),
 				Path.Combine(outDir, "{1}.{0}.config")
-			});
+			};
+			return needGlobal ? globalConfigs.Union(localConfigs) : localConfigs;
 		}
 	}
 }
