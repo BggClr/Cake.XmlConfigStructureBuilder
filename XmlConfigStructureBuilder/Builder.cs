@@ -68,21 +68,20 @@ namespace XmlConfigStructureBuilder
 
 		private static IEnumerable<string> GetFileNameTemplates(string configsFolder, string outDir, bool needGlobal)
 		{
-			var globals = new string[] {};
-			if (needGlobal)
-				globals = new[]
+			var globalConfigs = new[]
 				{
 					Path.Combine(configsFolder, "Global.Generic.config"),
-					Path.Combine(configsFolder, "Global.{0}.config")
+					Path.Combine(configsFolder, "Global.{0}.config"),
+					Path.Combine(configsFolder, "Global.{0}.config"),
+					Path.Combine(configsFolder, "{1}.{0}.config"),
 				};
 
-			return globals.Union(new[]
+			var localConfigs = new[]
 			{
-				Path.Combine(configsFolder, "Global.{0}.config"),
-				Path.Combine(configsFolder, "{1}.{0}.config"),
 				Path.Combine(outDir, "{1}.Generic.config"),
 				Path.Combine(outDir, "{1}.{0}.config")
-			});
+			};
+			return needGlobal ? globalConfigs.Union(localConfigs) : localConfigs;
 		}
 	}
 }
