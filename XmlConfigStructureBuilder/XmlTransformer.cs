@@ -1,25 +1,23 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using OutcoldSolutions.ConfigTransformationTool;
 
 namespace XmlConfigStructureBuilder
 {
 	public class XmlTransformer : IXmlTransformer
 	{
-		private const string CttPath = @".\tools\ctt.exe";
-
 		public void Transform(string config, string transform, string result)
 		{
-			var startInfo = new ProcessStartInfo
+			var log = OutputLog.FromWriter(Console.Out, Console.Error);
+			var task = new TransformationTask(log, config, transform, false)
 			{
-				CreateNoWindow = false,
-				UseShellExecute = false,
-				FileName = CttPath,
-				WindowStyle = ProcessWindowStyle.Hidden,
-				Arguments = $"s:{config} t:{transform} d:{result} i ic:\"\t\""
+				Indent = true,
+				IndentChars = "\t"
 			};
 
-			using (var exeProcess = Process.Start(startInfo))
+			if (!task.Execute(result))
 			{
-				exeProcess.WaitForExit();
+				throw new Exception("Transformtion is not completed");
 			}
 		}
 	}
