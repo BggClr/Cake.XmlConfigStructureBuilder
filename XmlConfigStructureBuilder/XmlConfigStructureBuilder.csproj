@@ -7,7 +7,7 @@
     <ProjectGuid>{566399D2-4486-430B-B20A-3E1C2600E113}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <RootNamespace>XmlConfigStructureBuilder</RootNamespace>
     <AssemblyName>XmlConfigStructureBuilder</AssemblyName>
     <FileAlignment>512</FileAlignment>
