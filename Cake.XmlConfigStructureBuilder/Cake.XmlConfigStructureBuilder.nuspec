@@ -1,9 +1,9 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 
 <package>
 	<metadata>
 		<id>Cake.XmlConfigStructureBuilder</id>
-		<version>0.0.1</version>
+		<version>0.0.1-alpha</version>
 		<title>$title$</title>
 		<authors>BggClr</authors>
 		<owners>$author$</owners>
@@ -14,4 +14,8 @@
 		<copyright>Copyright 2017</copyright>
 		<tags>Configs-Generator</tags>
 	</metadata>
+	<files>
+		<file src="bin\*.dll" target="lib\net45" />
+		<file src="bin\ctt.*" target="lib\net45" />
+	</files>
 </package>
