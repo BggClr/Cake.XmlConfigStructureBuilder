@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Path = System.IO.Path;
 
 namespace XmlConfigStructureBuilder
 {
 	public static class Builder
 	{
-		private const string ConfigsFolder = "_configs";
-		
+		private const string ConfigsFolder = "_configs\\default";
+
 		public static void CompileXmlConfig(IEnumerable<string> filenames, string result)
 		{
 			var existingFiles = filenames.Where(File.Exists).ToArray();
@@ -23,6 +22,7 @@ namespace XmlConfigStructureBuilder
 
 			File.Copy(firstConfigFile, result, true);
 			var restConfigFiles = existingFiles.Skip(1);
+
 			var transformer = new XmlTransformer();
 
 			foreach (var config in restConfigFiles)
@@ -31,10 +31,12 @@ namespace XmlConfigStructureBuilder
 			}
 		}
 
-		public static void CompileConfig(string name, string outDir, string buildConfig, Func<string, string, bool, IEnumerable<string>> fileNameTemplatesFactory)
+		public static void CompileConfig(string name, string outDir, string buildConfig,
+			Func<string, string, bool, IEnumerable<string>> fileNameTemplatesFactory = null)
 		{
 			var needGlobal = new[] {"app", "web"}.Contains(name);
-			var filenameTemplates = fileNameTemplatesFactory(ConfigsFolder, outDir, needGlobal);
+			var currentFileNameTemplatesFactory = fileNameTemplatesFactory ?? GetFileNameTemplates;
+			var filenameTemplates = currentFileNameTemplatesFactory(ConfigsFolder, outDir, needGlobal);
 			var filenames = filenameTemplates.Select(p => string.Format(p, buildConfig, name));
 			var outputFileName = Path.Combine(outDir, $"{name}.config");
 
@@ -60,7 +62,7 @@ namespace XmlConfigStructureBuilder
 				{
 					foreach (var configFile in configFiles)
 					{
-						CompileConfig(configFile, path, buildConfig, fileNameTemplatesFactory ?? GetFileNameTemplates);
+						CompileConfig(configFile, path, buildConfig, fileNameTemplatesFactory);
 					}
 				}
 			}
@@ -69,18 +71,19 @@ namespace XmlConfigStructureBuilder
 		private static IEnumerable<string> GetFileNameTemplates(string configsFolder, string outDir, bool needGlobal)
 		{
 			var globalConfigs = new[]
-				{
-					Path.Combine(configsFolder, "Global.Generic.config"),
-					Path.Combine(configsFolder, "Global.{0}.config"),
-					Path.Combine(configsFolder, "{1}.Generic.config"),
-					Path.Combine(configsFolder, "{1}.{0}.config"),
-				};
+			{
+				Path.Combine(configsFolder, "Global.Generic.config"),
+				Path.Combine(configsFolder, "Global.{0}.config"),
+				Path.Combine(configsFolder, "{1}.Generic.config"),
+				Path.Combine(configsFolder, "{1}.{0}.config")
+			};
 
-			var localConfigs = new[]
+			var localConfigs = new []
 			{
 				Path.Combine(outDir, "{1}.Generic.config"),
 				Path.Combine(outDir, "{1}.{0}.config")
 			};
+
 			return needGlobal ? globalConfigs.Union(localConfigs) : localConfigs;
 		}
 	}
