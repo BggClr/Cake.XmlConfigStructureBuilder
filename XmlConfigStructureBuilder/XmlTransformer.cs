@@ -1,22 +1,21 @@
 ﻿using System;
-using OutcoldSolutions.ConfigTransformationTool;
+using Microsoft.Web.XmlTransform;
 
 namespace XmlConfigStructureBuilder
 {
 	public class XmlTransformer : IXmlTransformer
 	{
-		public void Transform(string config, string transform, string result)
+		public void Transform(string sourceFile, string transformFile, string targetFile)
 		{
-			var log = OutputLog.FromWriter(Console.Out, Console.Error);
-			var task = new TransformationTask(log, config, transform, false)
+			using (var document = new XmlTransformableDocument {PreserveWhitespace = true})
+			using (var transform = new XmlTransformation(transformFile))
 			{
-				Indent = true,
-				IndentChars = "\t"
-			};
+				document.Load(sourceFile);
 
-			if (!task.Execute(result))
-			{
-				throw new Exception("Transformtion is not completed");
+				if (!transform.Apply(document))
+					throw new Exception($"Failed to transform \"{sourceFile}\" using \"{transformFile}\" to \"{targetFile}\"");
+
+				document.Save(targetFile);
 			}
 		}
 	}
