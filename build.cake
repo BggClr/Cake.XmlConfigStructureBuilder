@@ -37,7 +37,7 @@ Task("Pack")
       OutputDirectory = outputDir
     };
 
-    DotNetCorePack("./src/*", settings);
+    DotNetCorePack("./Cake.XmlConfigStructureBuilder/Cake.XmlConfigStructureBuilder.csproj", settings);
   });
 
 Task("Publish")
