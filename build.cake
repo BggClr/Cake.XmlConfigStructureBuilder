@@ -12,14 +12,8 @@ Task("Clean")
     CreateDirectory(outputDir);
   });
 
-Task("Restore")
-  .Does(() => {
-    DotNetCoreRestore(solutionPath);
-  });
-
 Task("Build")
   .IsDependentOn("Clean")
-  .IsDependentOn("Restore")
   .Does(() => {
     var settings =  new DotNetCoreBuildSettings
     {
