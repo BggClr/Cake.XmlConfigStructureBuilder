@@ -14,4 +14,4 @@ deploy_script:
 branches:
   only:
     - master
-	- develop
+    - develop
