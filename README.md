@@ -20,6 +20,15 @@ Task("MakeConfigs")
 	});
 ```
 
+Set *Addin NuGet dependencies* options
+
+```
+[NuGet]
+LoadDependencies=true
+```
+
+More info: [docs](https://cakebuild.net/docs/fundamentals/default-configuration-values#addin-nuget-dependencies)
+
 ### Override Filename Templates Factory
 
 You can override fileNameTemplatesFactory 
