@@ -1,6 +1,6 @@
 # XmlConfigStructureBuilder
 
-[![NuGet](https://img.shields.io/nuget/v/Cake.XmlConfigStructureBuilder.svg)](https://www.nuget.org/packages/Cake.XmlConfigStructureBuilder) [![Build Status](https://travis-ci.org/graph-uk/Cake.XmlConfigStructureBuilder.svg?branch=master)](https://travis-ci.org/graph-uk/Cake.XmlConfigStructureBuilder)
+[![NuGet](https://img.shields.io/nuget/v/Cake.XmlConfigStructureBuilder.svg)](https://www.nuget.org/packages/Cake.XmlConfigStructureBuilder) [![Build Status](https://travis-ci.org/graph-uk/Cake.XmlConfigStructureBuilder.svg?branch=master)](https://travis-ci.org/graph-uk/Cake.XmlConfigStructureBuilder) [![Build status](https://ci.appveyor.com/api/projects/status/qjqkajldidiwyjdm?svg=true)](https://ci.appveyor.com/project/jincod/cake-xmlconfigstructurebuilder)
 
 The project compiles multiple xml configs to single one using the [XDT](https://www.nuget.org/packages/Microsoft.Web.Xdt/)
 
@@ -9,7 +9,7 @@ The project compiles multiple xml configs to single one using the [XDT](https://
 ### Minimal configuration
 
 ```csharp
-#addin "Cake.XmlConfigStructureBuilder"
+#addin nuget:?package=Cake.XmlConfigStructureBuilder&version=0.6.1-alpha&prerelease&loaddependencies=true
 
 var configuration = Argument("buildConfiguration", "Debug");
 
@@ -19,15 +19,6 @@ Task("MakeConfigs")
 		MakeConfigs(configuration, ".");
 	});
 ```
-
-Set *Addin NuGet dependencies* options
-
-```
-[NuGet]
-LoadDependencies=true
-```
-
-More info: [docs](https://cakebuild.net/docs/fundamentals/default-configuration-values#addin-nuget-dependencies)
 
 ### Override Filename Templates Factory
 
