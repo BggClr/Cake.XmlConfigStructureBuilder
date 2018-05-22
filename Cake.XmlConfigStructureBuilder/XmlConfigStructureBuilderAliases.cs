@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Cake.Core;
 using Cake.Core.Annotations;
+using Cake.Core.Diagnostics;
 using XmlConfigStructureBuilder;
 
 namespace Cake.XmlConfigStructureBuilder
@@ -32,7 +33,7 @@ namespace Cake.XmlConfigStructureBuilder
 		public static void MakeConfigs(this ICakeContext context, string buildConfiguration, string projectRoot,
 			Func<string, string, bool, IEnumerable<string>> fileNameTemplatesFactory = null)
 		{
-			Builder.CompileProjectConfigs(buildConfiguration, projectRoot, fileNameTemplatesFactory);
+			GetBuilder(context).CompileProjectConfigs(buildConfiguration, projectRoot, fileNameTemplatesFactory);
 		}
 
 		/// <summary>
@@ -55,7 +56,16 @@ namespace Cake.XmlConfigStructureBuilder
 		public static void MakeSingleConfig(this ICakeContext context, string buildConfiguration, string configName,
 			string configDir, Func<string, string, bool, IEnumerable<string>> fileNameTemplatesFactory = null)
 		{
-			Builder.CompileConfig(configName, configDir, buildConfiguration, fileNameTemplatesFactory);
+			GetBuilder(context).CompileConfig(configName, configDir, buildConfiguration, fileNameTemplatesFactory);
+		}
+
+		private static Builder GetBuilder(ICakeContext context)
+		{
+			if (context == null) throw new ArgumentNullException(nameof(context));
+
+			void Logger(string message) => context.Log.Information(message);
+
+			return new Builder(Logger);
 		}
 	}
 }

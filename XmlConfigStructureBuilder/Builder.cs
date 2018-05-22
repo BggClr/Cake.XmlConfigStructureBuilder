@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,44 +6,47 @@ using System.Text.RegularExpressions;
 
 namespace XmlConfigStructureBuilder
 {
-	public static class Builder
+	public class Builder
 	{
 		private const string ConfigsFolder = "_configs\\default";
+		private readonly Action<string> _logger;
+		private readonly IXmlTransformer _transformer;
 
-		public static void CompileXmlConfig(IEnumerable<string> filenames, string result)
+		public Builder(Action<string> logger = null)
 		{
-			var existingFiles = filenames.Where(File.Exists).ToArray();
-			var firstConfigFile = existingFiles.FirstOrDefault();
+			_logger = logger ?? (message => { });
+			_transformer = new XmlTransformer();
+		}
 
-			if (firstConfigFile == null)
-				return;
+		private void CompileXmlConfig(List<string> filenames, string result)
+		{
+			_logger($"Name = {result}");
 
-			Console.WriteLine($"Name = {result}");
-
-			File.Copy(firstConfigFile, result, true);
-			var restConfigFiles = existingFiles.Skip(1);
-
-			var transformer = new XmlTransformer();
+			File.Copy(filenames.First(), result, true);
+			var restConfigFiles = filenames.Skip(1);
 
 			foreach (var config in restConfigFiles)
 			{
-				transformer.Transform(result, config, result);
+				_logger($"Transorm = {result} using {config}");
+
+				_transformer.Transform(result, config, result);
 			}
 		}
 
-		public static void CompileConfig(string name, string outDir, string buildConfig,
+		public void CompileConfig(string name, string outDir, string buildConfig,
 			Func<string, string, bool, IEnumerable<string>> fileNameTemplatesFactory = null)
 		{
 			var needGlobal = new[] {"app", "web"}.Contains(name);
 			var currentFileNameTemplatesFactory = fileNameTemplatesFactory ?? GetFileNameTemplates;
 			var filenameTemplates = currentFileNameTemplatesFactory(ConfigsFolder, outDir, needGlobal);
-			var filenames = filenameTemplates.Select(p => string.Format(p, buildConfig, name));
+			var filenames = filenameTemplates.Select(p => string.Format(p, buildConfig, name)).Where(File.Exists).ToList();
 			var outputFileName = Path.Combine(outDir, $"{name}.config");
 
-			CompileXmlConfig(filenames, outputFileName);
+			if (filenames.Any())
+				CompileXmlConfig(filenames, outputFileName);
 		}
 
-		public static void CompileProjectConfigs(string buildConfig, string projectRoot = ".", Func<string, string, bool, IEnumerable<string>> fileNameTemplatesFactory = null)
+		public void CompileProjectConfigs(string buildConfig, string projectRoot = ".", Func<string, string, bool, IEnumerable<string>> fileNameTemplatesFactory = null)
 		{
 			var files = Directory.GetFiles(projectRoot, "*.csproj", SearchOption.AllDirectories);
 
