@@ -5,7 +5,7 @@
 
 	<PropertyGroup>
 		<PackageId>Cake.XmlConfigStructureBuilder</PackageId>
-		<PackageVersion>0.6.1-alpha</PackageVersion>
+		<PackageVersion>1.0.0</PackageVersion>
 		<Authors>BggClr</Authors>
 		<Description>The project compiles multiple xml configs to single one using the CTT</Description>
 		<PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>

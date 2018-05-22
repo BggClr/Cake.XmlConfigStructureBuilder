@@ -9,7 +9,7 @@ The project compiles multiple xml configs to single one using the [XDT](https://
 ### Minimal configuration
 
 ```csharp
-#addin nuget:?package=Cake.XmlConfigStructureBuilder&version=0.6.1-alpha&prerelease&loaddependencies=true
+#addin nuget:?package=Cake.XmlConfigStructureBuilder&version=1.0.0&loaddependencies=true
 
 var configuration = Argument("buildConfiguration", "Debug");
 
