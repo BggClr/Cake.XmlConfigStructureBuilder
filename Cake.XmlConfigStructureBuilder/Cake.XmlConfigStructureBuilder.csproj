@@ -5,7 +5,7 @@
 
 	<PropertyGroup>
 		<PackageId>Cake.XmlConfigStructureBuilder</PackageId>
-		<PackageVersion>1.0.0</PackageVersion>
+		<PackageVersion>1.1.0</PackageVersion>
 		<Authors>BggClr</Authors>
 		<Description>The project compiles multiple xml configs to single one using the CTT</Description>
 		<PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
@@ -16,7 +16,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cake.Core" Version="0.27.2" PrivateAssets="All" />
+		<PackageReference Include="Cake.Core" Version="0.28.0" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.Web.Xdt" Version="2.1.2" />
 	</ItemGroup>
 	
