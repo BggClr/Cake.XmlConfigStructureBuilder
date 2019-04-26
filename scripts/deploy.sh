@@ -2,7 +2,7 @@
 
 set -e
 
-project_file=Cake.XmlConfigStructureBuilder/Cake.XmlConfigStructureBuilder.csproj
+project_file=$1
 project_name=$(basename $project_file .csproj)
 
 package_version=$(cat $project_file | grep -oP '<PackageVersion>(.*)<\/PackageVersion>' | sed "s/<PackageVersion>\|<\/PackageVersion>//g")
