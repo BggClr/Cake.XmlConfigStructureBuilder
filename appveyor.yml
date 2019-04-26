@@ -1,16 +1,17 @@
 version: 1.0.{build}
 
-image: ubuntu
+image: Visual Studio 2017
+# image: ubuntu
 
 build_script:
   - dotnet build
 
 environment:
   NUGET_API_KEY:
-    secure: M8kSq/XBFS6NriAu52f+ISNKzkmJVLjjOJw3P6+ShNaqnHcte4rAF4n5ijfFZ1Wa
+    secure: j9qYHISQiDQeJpRzdfWuEXtTrYBiKVGAC52jBTWP37BPjuKOtiUGj3/gKVVcWkln
 
 deploy_script:
-  - bash scripts/deploy.sh src/Cake.XmlConfigStructureBuilder/Cake.XmlConfigStructureBuilder.csproj
+  - bash scripts/deploy.sh Cake.XmlConfigStructureBuilder/Cake.XmlConfigStructureBuilder.csproj
 
 artifacts:
   - path: '*.nupkg'
