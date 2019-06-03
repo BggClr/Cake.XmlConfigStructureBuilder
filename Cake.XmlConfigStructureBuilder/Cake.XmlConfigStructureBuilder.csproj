@@ -8,7 +8,7 @@
 		<PackageVersion>1.3.1</PackageVersion>
 		<Authors>BggClr</Authors>
 		<Description>The project compiles multiple xml configs to single one using the CTT</Description>
-		<PackageProjectUrl>https://github.com/graph-uk/Cake.XmlConfigStructureBuilder.git</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/graph-uk/Cake.XmlConfigStructureBuilder</PackageProjectUrl>
 		<PackageIconUrl>https://cdn.jsdelivr.net/gh/cake-contrib/graphics/png/cake-contrib-medium.png</PackageIconUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
