@@ -5,7 +5,7 @@
 
 	<PropertyGroup>
 		<PackageId>Cake.XmlConfigStructureBuilder</PackageId>
-		<PackageVersion>2.0.1-beta</PackageVersion>
+		<PackageVersion>2.0.2-beta</PackageVersion>
 		<Authors>BggClr</Authors>
 		<Description>The project compiles multiple xml configs to single one using the CTT</Description>
 		<PackageProjectUrl>https://github.com/graph-uk/Cake.XmlConfigStructureBuilder</PackageProjectUrl>
@@ -16,7 +16,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cake.Core" Version="0.34.1" PrivateAssets="All" />
+		<PackageReference Include="Cake.Core" Version="0.35.0" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.Web.Xdt" Version="3.0.0" />
 	</ItemGroup>
 	
